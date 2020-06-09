@@ -6,6 +6,8 @@ namespace Nerd4ever\UrlQuery\Tests;
 use Nerd4ever\UrlQuery\Model\CriteriaBetween;
 use Nerd4ever\UrlQuery\Model\CriteriaContains;
 use Nerd4ever\UrlQuery\Model\CriteriaEquals;
+use Nerd4ever\UrlQuery\Model\CriteriaFinish;
+use Nerd4ever\UrlQuery\Model\CriteriaStart;
 use Nerd4ever\UrlQuery\Model\ICriteria;
 use Nerd4ever\UrlQuery\Model\Operators;
 use PHPUnit\Framework\TestCase;
@@ -55,6 +57,18 @@ class ParserTest extends TestCase
             'criteria equals text null -> str' => [(new CriteriaEquals())->setValue(null), 'nerd4ever', false],
             'criteria equals text str -> null' => [(new CriteriaEquals())->setValue('nerd4ever'), null, false],
             'criteria equals text different' => [(new CriteriaEquals())->setValue('sileno'), 'nerd4ever', false],
+            'criteria finish start' => [(new CriteriaFinish())->setValue('123'), '1', false],
+            'criteria finish mid' => [(new CriteriaFinish())->setValue('123'), '2', false],
+            'criteria finish end str -> str' => [(new CriteriaFinish())->setValue('123'), '3', true],
+            'criteria finish end int -> str' => [(new CriteriaFinish())->setValue(123), '3', true],
+            'criteria finish end str -> int' => [(new CriteriaFinish())->setValue('123'), 3, true],
+            'criteria finish end int -> int' => [(new CriteriaFinish())->setValue(123), 3, true],
+            'criteria start start' => [(new CriteriaStart())->setValue('123'), '1', true],
+            'criteria start mid' => [(new CriteriaStart())->setValue('123'), '2', false],
+            'criteria start end str -> str' => [(new CriteriaStart())->setValue('123'), '3', false],
+            'criteria start end int -> str' => [(new CriteriaStart())->setValue(123), '1', true],
+            'criteria start end str -> int' => [(new CriteriaStart())->setValue('123'), 1, true],
+            'criteria start end int -> int' => [(new CriteriaStart())->setValue(123), 1, true],
         ];
     }
 

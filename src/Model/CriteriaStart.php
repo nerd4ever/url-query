@@ -6,15 +6,37 @@ namespace Nerd4ever\UrlQuery\Model;
 
 class CriteriaStart implements ICriteria
 {
+    private $value;
+
+    /**
+     * @return mixed
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param mixed $value
+     * @return CriteriaStart
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+        return $this;
+    }
 
     public function getOperator()
     {
-        // TODO: Implement getOperator() method.
+        return Operators::start;
     }
 
     public function check($value)
     {
-        // TODO: Implement check() method.
+        $needle = is_string($value) ? $value : strval($value);
+        $haystack = is_string($this->getValue()) ? $this->getValue() : strval($this->getValue());
+        $length = strlen($needle);
+        return (substr($haystack, 0, $length) === $needle);
     }
 
     public function parser($value)

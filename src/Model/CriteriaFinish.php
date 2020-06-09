@@ -34,7 +34,13 @@ final class CriteriaFinish implements ICriteria
 
     public function check($value)
     {
-
+        $needle = is_string($value) ? $value : strval($value);
+        $length = strlen($needle);
+        if ($length == 0) {
+            return false;
+        }
+        $haystack = is_string($this->getValue()) ? $this->getValue() : strval($this->getValue());
+        return (substr($haystack, -$length) === $needle);
     }
 
     public function parser($value)
