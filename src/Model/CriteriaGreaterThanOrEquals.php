@@ -4,7 +4,7 @@
 namespace Nerd4ever\UrlQuery\Model;
 
 
-class CriteriaGreaterThanOrEquals implements ICriteria
+final class CriteriaGreaterThanOrEquals implements ICriteria
 {
     private $value;
 

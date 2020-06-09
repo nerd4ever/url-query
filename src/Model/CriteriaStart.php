@@ -4,7 +4,7 @@
 namespace Nerd4ever\UrlQuery\Model;
 
 
-class CriteriaStart implements ICriteria
+final class CriteriaStart implements ICriteria
 {
     private $value;
 

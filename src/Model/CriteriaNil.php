@@ -4,7 +4,7 @@
 namespace Nerd4ever\UrlQuery\Model;
 
 
-class CriteriaNil implements ICriteria
+final class CriteriaNil implements ICriteria
 {
 
     public function getOperator()
