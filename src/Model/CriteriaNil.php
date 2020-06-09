@@ -9,12 +9,12 @@ class CriteriaNil implements ICriteria
 
     public function getOperator()
     {
-        // TODO: Implement getOperator() method.
+        return Operators::nil;
     }
 
     public function check($value)
     {
-        // TODO: Implement check() method.
+        return is_null($value);
     }
 
     public function parser($value)

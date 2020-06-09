@@ -7,6 +7,13 @@ use Nerd4ever\UrlQuery\Model\CriteriaBetween;
 use Nerd4ever\UrlQuery\Model\CriteriaContains;
 use Nerd4ever\UrlQuery\Model\CriteriaEquals;
 use Nerd4ever\UrlQuery\Model\CriteriaFinish;
+use Nerd4ever\UrlQuery\Model\CriteriaGreaterThan;
+use Nerd4ever\UrlQuery\Model\CriteriaGreaterThanOrEquals;
+use Nerd4ever\UrlQuery\Model\CriteriaIn;
+use Nerd4ever\UrlQuery\Model\CriteriaLessThan;
+use Nerd4ever\UrlQuery\Model\CriteriaLessThanOrEquals;
+use Nerd4ever\UrlQuery\Model\CriteriaNil;
+use Nerd4ever\UrlQuery\Model\CriteriaNotEquals;
 use Nerd4ever\UrlQuery\Model\CriteriaStart;
 use Nerd4ever\UrlQuery\Model\ICriteria;
 use Nerd4ever\UrlQuery\Model\Operators;
@@ -69,6 +76,55 @@ class ParserTest extends TestCase
             'criteria start end int -> str' => [(new CriteriaStart())->setValue(123), '1', true],
             'criteria start end str -> int' => [(new CriteriaStart())->setValue('123'), 1, true],
             'criteria start end int -> int' => [(new CriteriaStart())->setValue(123), 1, true],
+            'criteria great than major int -> str' => [(new CriteriaGreaterThan())->setValue(2), 'a', true],
+            'criteria great than major str -> int' => [(new CriteriaGreaterThan())->setValue('a'), 2, false],
+            'criteria great than major int -> int' => [(new CriteriaGreaterThan())->setValue(2), 3, true],
+            'criteria great than minor int -> int' => [(new CriteriaGreaterThan())->setValue(2), 1, false],
+            'criteria great than equals int -> int' => [(new CriteriaGreaterThan())->setValue(2), 2, false],
+            'criteria great than major str -> str' => [(new CriteriaGreaterThan())->setValue('nerd4ever'), 'sileno', true],
+            'criteria great than minor str -> str' => [(new CriteriaGreaterThan())->setValue('sileno'), 'nerd4ever', false],
+            'criteria great than equals str -> str' => [(new CriteriaGreaterThan())->setValue('nerd4ever'), 'nerd4ever', false],
+            'criteria less than major int -> str' => [(new CriteriaLessThan())->setValue(2), 'a', false],
+            'criteria less than major str -> int' => [(new CriteriaLessThan())->setValue('a'), 2, true],
+            'criteria less than major int -> int' => [(new CriteriaLessThan())->setValue(2), 3, false],
+            'criteria less than minor int -> int' => [(new CriteriaLessThan())->setValue(2), 1, true],
+            'criteria less than equals int -> int' => [(new CriteriaLessThan())->setValue(2), 2, false],
+            'criteria less than major str -> str' => [(new CriteriaLessThan())->setValue('nerd4ever'), 'sileno', false],
+            'criteria less than minor str -> str' => [(new CriteriaLessThan())->setValue('sileno'), 'nerd4ever', true],
+            'criteria less than equals str -> str' => [(new CriteriaLessThan())->setValue('nerd4ever'), 'nerd4ever', false],
+            'criteria not equals str -> str' => [(new CriteriaNotEquals())->setValue('1'), '1', false],
+            'criteria not equals str -> int' => [(new CriteriaNotEquals())->setValue('1'), 1, false],
+            'criteria not equals int -> str' => [(new CriteriaNotEquals())->setValue(1), '1', false],
+            'criteria not equals text' => [(new CriteriaNotEquals())->setValue('nerd4ever'), 'nerd4ever', false],
+            'criteria not equals text null' => [(new CriteriaNotEquals())->setValue(null), null, false],
+            'criteria not equals text null -> str' => [(new CriteriaNotEquals())->setValue(null), 'nerd4ever', true],
+            'criteria not equals text str -> null' => [(new CriteriaNotEquals())->setValue('nerd4ever'), null, true],
+            'criteria not equals text different' => [(new CriteriaNotEquals())->setValue('sileno'), 'nerd4ever', true],
+            'criteria nil text null' => [(new CriteriaNil()), 'nerd4ever', false],
+            'criteria nil text int' => [(new CriteriaNil()), null, true],
+            'criteria nil text str' => [(new CriteriaNil()), 1, false],
+            'criteria nil text empty' => [(new CriteriaNil()), '', false],
+            'criteria nil text zero' => [(new CriteriaNil()), '0', false],
+            'criteria less than or equals major int -> str' => [(new CriteriaLessThanOrEquals())->setValue(2), 'a', false],
+            'criteria less than or equals major str -> int' => [(new CriteriaLessThanOrEquals())->setValue('a'), 2, true],
+            'criteria less than or equals major int -> int' => [(new CriteriaLessThanOrEquals())->setValue(2), 3, false],
+            'criteria less than or equals minor int -> int' => [(new CriteriaLessThanOrEquals())->setValue(2), 1, true],
+            'criteria less than or equals equals int -> int' => [(new CriteriaLessThanOrEquals())->setValue(2), 2, true],
+            'criteria less than or equals major str -> str' => [(new CriteriaLessThanOrEquals())->setValue('nerd4ever'), 'sileno', false],
+            'criteria less than or equals minor str -> str' => [(new CriteriaLessThanOrEquals())->setValue('sileno'), 'nerd4ever', true],
+            'criteria less than or equals equals str -> str' => [(new CriteriaLessThanOrEquals())->setValue('nerd4ever'), 'nerd4ever', true],
+            'criteria great than or equals major int -> str' => [(new CriteriaGreaterThanOrEquals())->setValue(2), 'a', true],
+            'criteria great than or equals major str -> int' => [(new CriteriaGreaterThanOrEquals())->setValue('a'), 2, false],
+            'criteria great than or equals major int -> int' => [(new CriteriaGreaterThanOrEquals())->setValue(2), 3, true],
+            'criteria great than or equals minor int -> int' => [(new CriteriaGreaterThanOrEquals())->setValue(2), 1, false],
+            'criteria great than or equals equals int -> int' => [(new CriteriaGreaterThanOrEquals())->setValue(2), 2, true],
+            'criteria great than or equals major str -> str' => [(new CriteriaGreaterThanOrEquals())->setValue('nerd4ever'), 'sileno', true],
+            'criteria great than or equals minor str -> str' => [(new CriteriaGreaterThanOrEquals())->setValue('sileno'), 'nerd4ever', false],
+            'criteria great than or equals equals str -> str' => [(new CriteriaGreaterThanOrEquals())->setValue('nerd4ever'), 'nerd4ever', true],
+            'criteria in found int' => [(new CriteriaIn())->setValues(['1', '2', '3']), 3, true],
+            'criteria in found str' => [(new CriteriaIn())->setValues(['1', '2', '3']), "1", true],
+            'criteria in not found int' => [(new CriteriaIn())->setValues(['1', '2', '3']), 4, false],
+            'criteria in not found str' => [(new CriteriaIn())->setValues(['1', '2', '3']), "4", false],
         ];
     }
 

@@ -4,7 +4,7 @@
 namespace Nerd4ever\UrlQuery\Model;
 
 
-final class CriteriaGreaterThan implements ICriteria
+class CriteriaGreaterThanOrEquals implements ICriteria
 {
     private $value;
 
@@ -18,7 +18,7 @@ final class CriteriaGreaterThan implements ICriteria
 
     /**
      * @param mixed $value
-     * @return CriteriaGreaterThan
+     * @return CriteriaGreaterThanOrEquals
      */
     public function setValue($value)
     {
@@ -26,22 +26,22 @@ final class CriteriaGreaterThan implements ICriteria
         return $this;
     }
 
-
     public function getOperator()
     {
-        return Operators::gt;
+        return Operators::ge;
     }
 
     public function check($value)
     {
         if (is_numeric($this->getValue()) && is_numeric($value)) {
-            return intval($value) > intval($this->getValue());
+            return intval($value) >= intval($this->getValue());
         }
-        return strcasecmp(strval($value), strval($this->getValue())) > 0;
+        return strcasecmp(strval($value), strval($this->getValue())) >= 0;
     }
 
     public function parser($value)
     {
         // TODO: Implement parser() method.
     }
+
 }

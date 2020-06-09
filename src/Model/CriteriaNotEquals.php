@@ -7,14 +7,35 @@ namespace Nerd4ever\UrlQuery\Model;
 final class CriteriaNotEquals implements ICriteria
 {
 
+    private $value;
+
+    /**
+     * @return mixed
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param mixed $value
+     * @return CriteriaNotEquals
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+        return $this;
+    }
+
+
     public function getOperator()
     {
-        // TODO: Implement getOperator() method.
+        return Operators::ne;
     }
 
     public function check($value)
     {
-        // TODO: Implement check() method.
+        return $this->getValue() != $value;
     }
 
     public function parser($value)
