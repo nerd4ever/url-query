@@ -14,6 +14,7 @@ use Nerd4ever\UrlQuery\Model\CriteriaLessThan;
 use Nerd4ever\UrlQuery\Model\CriteriaLessThanOrEquals;
 use Nerd4ever\UrlQuery\Model\CriteriaNil;
 use Nerd4ever\UrlQuery\Model\CriteriaNotEquals;
+use Nerd4ever\UrlQuery\Model\CriteriaRegex;
 use Nerd4ever\UrlQuery\Model\CriteriaStart;
 use Nerd4ever\UrlQuery\Model\ICriteria;
 use Nerd4ever\UrlQuery\Model\Operators;
@@ -125,6 +126,10 @@ class ParserTest extends TestCase
             'criteria in found str' => [(new CriteriaIn())->setValues(['1', '2', '3']), "1", true],
             'criteria in not found int' => [(new CriteriaIn())->setValues(['1', '2', '3']), 4, false],
             'criteria in not found str' => [(new CriteriaIn())->setValues(['1', '2', '3']), "4", false],
+            'criteria regex found' => [(new CriteriaRegex())->setValue('[0-9]'), "123", true],
+            'criteria regex not found' => [(new CriteriaRegex())->setValue('[^0-9]'), "123", false],
+            'criteria regex found limited' => [(new CriteriaRegex())->setValue('[0-9]{3}'), "123", true],
+            'criteria regex not found limited' => [(new CriteriaRegex())->setValue('[0-9]{3}'), "1", false],
         ];
     }
 

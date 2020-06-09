@@ -6,15 +6,35 @@ namespace Nerd4ever\UrlQuery\Model;
 
 final class CriteriaRegex implements ICriteria
 {
+    private $value;
+
+    /**
+     * @return mixed
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param mixed $value
+     * @return CriteriaRegex
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+        return $this;
+    }
 
     public function getOperator()
     {
-        // TODO: Implement getOperator() method.
+        return Operators::regex;
     }
 
     public function check($value)
     {
-        // TODO: Implement check() method.
+        $pattern = '/' . $this->getValue() . '/';
+        return preg_match($pattern, $value) === 1;
     }
 
     public function parser($value)
