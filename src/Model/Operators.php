@@ -27,22 +27,25 @@ class Operators
      */
     public static function isValid($value)
     {
-        return in_array($value,
-            [
-                Operators::ge,
-                Operators::le,
-                Operators::ne,
-                Operators::eq,
-                Operators::gt,
-                Operators::lt,
-                Operators::regex,
-                Operators::in,
-                Operators::between,
-                Operators::contains,
-                Operators::start,
-                Operators::finish,
-                Operators::nil
-            ]
-        );
+        return in_array($value, Operators::list());
+    }
+
+    public static function list()
+    {
+        return [
+            Operators::ge,
+            Operators::le,
+            Operators::ne,
+            Operators::eq,
+            Operators::gt,
+            Operators::lt,
+            Operators::regex,
+            Operators::in,
+            Operators::between,
+            Operators::contains,
+            Operators::start,
+            Operators::finish,
+            Operators::nil
+        ];
     }
 }

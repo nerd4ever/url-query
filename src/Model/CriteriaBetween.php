@@ -8,6 +8,7 @@ final class CriteriaBetween implements ICriteria
 {
     private $start;
     private $end;
+    private $field;
 
     /**
      * @return mixed
@@ -45,6 +46,24 @@ final class CriteriaBetween implements ICriteria
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    /**
+     * @param mixed $field
+     * @return CriteriaBetween
+     */
+    public function setField($field)
+    {
+        $this->field = $field;
+        return $this;
+    }
+
 
     public function getOperator()
     {
@@ -58,6 +77,15 @@ final class CriteriaBetween implements ICriteria
 
     public function parser($value)
     {
-        // TODO: Implement parser() method.
+        $pattern = sprintf('/^([_a-zA-Z\d]+)=(%s):(.+)?,(.+)$/', $this->getOperator());
+        if (preg_match($pattern, $value, $matches) !== 1) return false;
+        if (count($matches) != 5) return false;
+        if ($this->getOperator() != $matches[2]) return false;
+        $this->setStart($matches[3]);
+        $this->setEnd($matches[4]);
+        $this->setField($matches[1]);
+        return true;
     }
+
+
 }

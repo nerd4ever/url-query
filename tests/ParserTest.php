@@ -43,6 +43,106 @@ class ParserTest extends TestCase
         $this->assertSame($expected, $criteria->check($value));
     }
 
+    /**
+     * @dataProvider parserProvider
+     * @param ICriteria $criteria
+     * @param $value
+     * @param $expected
+     */
+    public function testParser(ICriteria $criteria, $value, $expected)
+    {
+        $this->assertSame($expected, $criteria->parser($value));
+    }
+
+    public function parserProvider()
+    {
+        return [
+            'parser between found' => [new CriteriaBetween(), 'date=between:3,5', true],
+            'parser between invalid range' => [new CriteriaBetween(), 'date=between:3', false],
+            'parser between invalid operator' => [new CriteriaBetween(), 'date=betwe:3,5', false],
+            'parser between invalid field' => [new CriteriaBetween(), '=between:3,5', false],
+            'parser between invalid field split' => [new CriteriaBetween(), 'datebetween:3,5', false],
+            'parser contains found with operator' => [new CriteriaContains(), 'date=contains:3,5', true],
+            'parser contains found without operator' => [new CriteriaContains(), 'date=contains:3', true],
+            'parser contains variable alphanumeric' => [new CriteriaContains(), 'date1=contains:3', true],
+            'parser contains invalid operator' => [new CriteriaContains(), 'date=3,5', false],
+            'parser contains invalid field' => [new CriteriaContains(), '=contains:3,5', false],
+            'parser contains invalid field split' => [new CriteriaContains(), 'datecontains:3,5', false],
+            'parser equals found with operator' => [new CriteriaEquals(), 'date=eq:3,5', true],
+            'parser equals found without operator' => [new CriteriaEquals(), 'date=eq:3', true],
+            'parser equals variable alphanumeric' => [new CriteriaEquals(), 'date1=eq:3', true],
+            'parser equals invalid operator' => [new CriteriaEquals(), 'date=3,5', true],
+            'parser equals invalid operator empty' => [new CriteriaEquals(), 'date=', false],
+            'parser equals invalid field' => [new CriteriaEquals(), '=contains:3,5', false],
+            'parser equals invalid field split' => [new CriteriaEquals(), 'datecontains:3,5', false],
+            'parser finish found with operator' => [new CriteriaFinish(), 'date=finish:3,5', true],
+            'parser finish found without operator' => [new CriteriaFinish(), 'date=finish:3', true],
+            'parser finish variable alphanumeric' => [new CriteriaFinish(), 'date1=finish:3', true],
+            'parser finish invalid operator' => [new CriteriaFinish(), 'date=3,5', false],
+            'parser finish invalid field' => [new CriteriaFinish(), '=finish:3,5', false],
+            'parser finish invalid field split' => [new CriteriaFinish(), 'datefinish:3,5', false],
+            'parser greater than found with operator' => [new CriteriaGreaterThan(), 'date=gt:3,5', true],
+            'parser greater than found without operator' => [new CriteriaGreaterThan(), 'date=gt:3', true],
+            'parser greater than variable alphanumeric' => [new CriteriaGreaterThan(), 'date1=gt:3', true],
+            'parser greater than invalid operator' => [new CriteriaGreaterThan(), 'date=3,5', false],
+            'parser greater than invalid field' => [new CriteriaGreaterThan(), '=gt:3,5', false],
+            'parser greater than invalid field split' => [new CriteriaGreaterThan(), 'dategt:3,5', false],
+            'parser greater than or equals found with operator' => [new CriteriaGreaterThanOrEquals(), 'date=ge:3,5', true],
+            'parser greater than or equals found without operator' => [new CriteriaGreaterThanOrEquals(), 'date=ge:3', true],
+            'parser greater than or equals variable alphanumeric' => [new CriteriaGreaterThanOrEquals(), 'date1=ge:3', true],
+            'parser greater than or equals invalid operator' => [new CriteriaGreaterThanOrEquals(), 'date=3,5', false],
+            'parser greater than or equals invalid field' => [new CriteriaGreaterThanOrEquals(), '=ge:3,5', false],
+            'parser greater than or equals invalid field split' => [new CriteriaGreaterThanOrEquals(), 'datege:3,5', false],
+            'parser less than found with operator' => [new CriteriaLessThan(), 'date=lt:3,5', true],
+            'parser less than found without operator' => [new CriteriaLessThan(), 'date=lt:3', true],
+            'parser less than variable alphanumeric' => [new CriteriaLessThan(), 'date1=lt:3', true],
+            'parser less than invalid operator' => [new CriteriaLessThan(), 'date=3,5', false],
+            'parser less than invalid field' => [new CriteriaLessThan(), '=lt:3,5', false],
+            'parser less than invalid field split' => [new CriteriaLessThan(), 'datelt:3,5', false],
+            'parser less than or equals found with operator' => [new CriteriaLessThanOrEquals(), 'date=le:3,5', true],
+            'parser less than or equals found without operator' => [new CriteriaLessThanOrEquals(), 'date=le:3', true],
+            'parser less than or equals variable alphanumeric' => [new CriteriaLessThanOrEquals(), 'date1=le:3', true],
+            'parser less than or equals invalid operator' => [new CriteriaLessThanOrEquals(), 'date=3,5', false],
+            'parser less than or equals invalid field' => [new CriteriaLessThanOrEquals(), '=le:3,5', false],
+            'parser less than or equals invalid field split' => [new CriteriaLessThanOrEquals(), 'datele:3,5', false],
+            'parser nil found with operator' => [new CriteriaNil(), 'date=nil:', true],
+            'parser nil found without operator' => [new CriteriaNil(), 'date=nil:3', false],
+            'parser nil variable alphanumeric' => [new CriteriaNil(), 'date1=nil:3', false],
+            'parser nil invalid operator' => [new CriteriaNil(), 'date=3,5', false],
+            'parser nil invalid field' => [new CriteriaNil(), '=nil:3,5', false],
+            'parser nil invalid field split' => [new CriteriaNil(), 'datenil:3,5', false],
+            'parser not equals found with other operator' => [new CriteriaNotEquals(), 'date=other:3,5', false],
+            'parser not equals found with operator' => [new CriteriaNotEquals(), 'date=ne:3,5', true],
+            'parser not equals found without operator' => [new CriteriaNotEquals(), 'date=ne:3', true],
+            'parser not equals variable alphanumeric' => [new CriteriaNotEquals(), 'date1=ne:3', true],
+            'parser not equals invalid operator' => [new CriteriaNotEquals(), 'date=3,5', false],
+            'parser not equals invalid field' => [new CriteriaNotEquals(), '=ne:3,5', false],
+            'parser not equals invalid field split' => [new CriteriaNotEquals(), 'datene:3,5', false],
+            'parser regex found with other operator' => [new CriteriaRegex(), 'date=other:3,5', false],
+            'parser regex found with operator' => [new CriteriaRegex(), 'date=regex:3,5', true],
+            'parser regex found without operator' => [new CriteriaRegex(), 'date=regex:3', true],
+            'parser regex variable alphanumeric' => [new CriteriaRegex(), 'date1=regex:3', true],
+            'parser regex invalid operator' => [new CriteriaRegex(), 'regex=3,5', false],
+            'parser regex invalid field' => [new CriteriaRegex(), '=regex:3,5', false],
+            'parser regex invalid field split' => [new CriteriaRegex(), 'dateregex:3,5', false],
+            'parser start found with other operator' => [new CriteriaStart(), 'date=other:3,5', false],
+            'parser start found with operator' => [new CriteriaStart(), 'date=start:3,5', true],
+            'parser start found without operator' => [new CriteriaStart(), 'date=start:3', true],
+            'parser start variable alphanumeric' => [new CriteriaStart(), 'date1=start:3', true],
+            'parser start invalid operator' => [new CriteriaStart(), 'start=3,5', false],
+            'parser start invalid field' => [new CriteriaStart(), '=start:3,5', false],
+            'parser start invalid field split' => [new CriteriaStart(), 'datestart:3,5', false],
+
+            'parser in found with other operator' => [new CriteriaIn(), 'date=other:3,5', false],
+            'parser in found with operator' => [new CriteriaIn(), 'date=in:3,5', true],
+            'parser in found without operator' => [new CriteriaIn(), 'date=in:3', true],
+            'parser in variable alphanumeric' => [new CriteriaIn(), 'date1=in:3', true],
+            'parser in invalid operator' => [new CriteriaIn(), 'in=3,5', false],
+            'parser in invalid field' => [new CriteriaIn(), '=in:3,5', false],
+            'parser in invalid field split' => [new CriteriaIn(), 'datein:3,5', false],
+        ];
+    }
+
     public function criteriaProvider()
     {
         return [
