@@ -32,6 +32,3 @@ jobs:
 
       - name: Run test suite
         run: composer run-script test
-
-      - name: Publish coverage
-        run: curl -s https://codecov.io/bash
