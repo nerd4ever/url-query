@@ -18,6 +18,7 @@ use Nerd4ever\UrlQuery\Model\CriteriaRegex;
 use Nerd4ever\UrlQuery\Model\CriteriaStart;
 use Nerd4ever\UrlQuery\Model\ICriteria;
 use Nerd4ever\UrlQuery\Model\Operators;
+use Nerd4ever\UrlQuery\Model\UrlQuery;
 use PHPUnit\Framework\TestCase;
 
 class ParserTest extends TestCase
@@ -30,6 +31,81 @@ class ParserTest extends TestCase
     public function testOperators($operator, $expected)
     {
         $this->assertSame($expected, Operators::isValid($operator));
+    }
+
+    public function testQueryString()
+    {
+        $mData = [
+            'data0' => sprintf('3'),
+            'data1' => sprintf('%s:3', Operators::ge),
+            'data2' => sprintf('%s:3', Operators::le),
+            'data3' => sprintf('%s:3', Operators::ne),
+            'data4' => sprintf('%s:3', Operators::eq),
+            'data5' => sprintf('%s:3', Operators::gt),
+            'data6' => sprintf('%s:3', Operators::lt),
+            'data7' => sprintf('%s:[0-9]', Operators::regex),
+            'data8' => sprintf('%s:3,4,5', Operators::in),
+            'data9' => sprintf('%s:3,5', Operators::between),
+            'data10' => sprintf('%s:3', Operators::contains),
+            'data11' => sprintf('%s:3', Operators::start),
+            'data12' => sprintf('%s:5', Operators::finish),
+            'data13' => sprintf('%s:', Operators::nil),
+        ];
+        $length = sizeof($mData);
+        $urlQuery = new UrlQuery();
+        $urlQuery->parser(http_build_query($mData));
+        $mFilters = $urlQuery->getFilters();
+        $this->assertEquals($length, sizeof($mFilters), 'query string parse parameters');
+        foreach ($mFilters as $filter) {
+            $this->assertTrue($filter instanceof ICriteria, sprintf('check if filter is instance of ICriteria'));
+            if (!$filter instanceof ICriteria) continue;
+            switch ($filter->getField()) {
+                case 'data0':
+                    $this->assertTrue($filter instanceof CriteriaEquals, sprintf('check if %s was parser correctly', $filter->getField()));
+                    break;
+                case 'data1':
+                    $this->assertTrue($filter instanceof CriteriaGreaterThanOrEquals, sprintf('check if %s was parser correctly', $filter->getField()));
+                    break;
+                case 'data2':
+                    $this->assertTrue($filter instanceof CriteriaLessThanOrEquals, sprintf('check if %s was parser correctly', $filter->getField()));
+                    break;
+                case 'data3':
+                    $this->assertTrue($filter instanceof CriteriaNotEquals, sprintf('check if %s was parser correctly', $filter->getField()));
+                    break;
+                case 'data4':
+                    $this->assertTrue($filter instanceof CriteriaEquals, sprintf('check if %s was parser correctly', $filter->getField()));
+                    break;
+                case 'data5':
+                    $this->assertTrue($filter instanceof CriteriaGreaterThan, sprintf('check if %s was parser correctly', $filter->getField()));
+                    break;
+                case 'data6':
+                    $this->assertTrue($filter instanceof CriteriaLessThan, sprintf('check if %s was parser correctly', $filter->getField()));
+                    break;
+                case 'data7':
+                    $this->assertTrue($filter instanceof CriteriaRegex, sprintf('check if %s was parser correctly', $filter->getField()));
+                    break;
+                case 'data8':
+                    $this->assertTrue($filter instanceof CriteriaIn, sprintf('check if %s was parser correctly', $filter->getField()));
+                    break;
+                case 'data9':
+                    $this->assertTrue($filter instanceof CriteriaBetween, sprintf('check if %s was parser correctly', $filter->getField()));
+                    break;
+                case 'data10':
+                    $this->assertTrue($filter instanceof CriteriaContains, sprintf('check if %s was parser correctly', $filter->getField()));
+                    break;
+                case 'data11':
+                    $this->assertTrue($filter instanceof CriteriaStart, sprintf('check if %s was parser correctly', $filter->getField()));
+                    break;
+                case 'data12':
+                    $this->assertTrue($filter instanceof CriteriaFinish, sprintf('check if %s was parser correctly', $filter->getField()));
+                    break;
+                case 'data13':
+                    $this->assertTrue($filter instanceof CriteriaNil, sprintf('check if %s was parser correctly', $filter->getField()));
+                    break;
+                default:
+                    $this->fail(sprintf('field %s unexpected', $filter->getField()));
+            }
+        }
     }
 
     /**
