@@ -1,32 +1,41 @@
 {
-    "name": "nerd4ever/url-query",
-    "description": "A library to extract parameters to filter and sort",
-    "type": "library",
-    "license": "proprietary",
-    "authors": [
-        {
-            "name": "Nerd4ever Desenvolvimento Tecnologico e Inovacao Ltda",
-            "email": "suporte@nerd4ever.com.br"
-        }
-    ],
-    "minimum-stability": "stable",
-    "require": {
-        "php": "^7.2.5"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "9.1.5"
-    },
-    "autoload": {
-        "psr-4": {
-            "Nerd4ever\\UrlQuery\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Nerd4ever\\UrlQuery\\Tests\\": "tests/"
-        }
-    },
-    "conflict": {
-        "nerd4ever/url-query": "*"
+  "name": "nerd4ever/url-query",
+  "description": "A library to extract parameters to filter and sort",
+  "type": "library",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Nerd4ever Desenvolvimento Tecnologico e Inovacao Ltda",
+      "email": "suporte@nerd4ever.com.br"
     }
+  ],
+  "keywords": [
+    "php",
+    "sort",
+    "filter",
+    "rest"
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": "^7.1.3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "9.1.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Nerd4ever\\UrlQuery\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Nerd4ever\\UrlQuery\\Tests\\": "tests/"
+    }
+  },
+  "conflict": {
+    "nerd4ever/url-query": "*"
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit"
+  }
 }
