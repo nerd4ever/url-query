@@ -35,7 +35,8 @@ class ParserTest extends TestCase
 
     public function testQueryString()
     {
-        $mData = [
+        $urlQuery = new UrlQuery();
+        $mFilters = [
             'data0' => sprintf('3'),
             'data1' => sprintf('%s:3', Operators::ge),
             'data2' => sprintf('%s:3', Operators::le),
@@ -51,12 +52,24 @@ class ParserTest extends TestCase
             'data12' => sprintf('%s:5', Operators::finish),
             'data13' => sprintf('%s:', Operators::nil),
         ];
-        $length = sizeof($mData);
-        $urlQuery = new UrlQuery();
-        $urlQuery->parser(http_build_query($mData));
-        $mFilters = $urlQuery->getFilters();
-        $this->assertEquals($length, sizeof($mFilters), 'query string parse parameters');
-        foreach ($mFilters as $filter) {
+        $i = sizeof($mFilters);
+
+        $mSorters = ['data1:asc', 'data2:desc', 'data3'];
+
+        $j = sizeof($mSorters);
+
+        $urlQuery->parser(http_build_query(array_merge($mFilters, [
+            $urlQuery->getReservedSortField() => join(',', $mSorters)
+        ])));
+
+        $rFilters = $urlQuery->getFilters();
+        $this->assertEquals($i, sizeof($rFilters), 'query string parse filters');
+
+        $rSorters = $urlQuery->getSorters();
+        $this->assertEquals($j, sizeof($rSorters), 'query string parse sorters');
+
+
+        foreach ($rFilters as $filter) {
             $this->assertTrue($filter instanceof ICriteria, sprintf('check if filter is instance of ICriteria'));
             if (!$filter instanceof ICriteria) continue;
             switch ($filter->getField()) {

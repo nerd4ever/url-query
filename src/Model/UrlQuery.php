@@ -6,7 +6,37 @@ namespace Nerd4ever\UrlQuery\Model;
 
 class UrlQuery
 {
+    private $reservedSortField;
     private $filters;
+    private $sorters;
+
+    /**
+     * UrlQuery constructor.
+     * @param $reservedSortField
+     */
+    public function __construct($reservedSortField = '_orders')
+    {
+        $this->reservedSortField = $reservedSortField;
+        $this->sorters = [];
+        $this->filters = [];
+    }
+
+    /**
+     * @return string
+     */
+    final public function getReservedSortField(): string
+    {
+        return $this->reservedSortField;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSorters(): array
+    {
+        return $this->sorters;
+    }
+
 
     /**
      * @return mixed
@@ -20,14 +50,32 @@ class UrlQuery
     {
         $mQuery = explode('?', $queryString);
         $sQuery = count($mQuery) == 2 ? $mQuery[1] : $mQuery[0];
-        parse_str($sQuery, $mFilters);
-        $this->filters = $this->parseFilter($mFilters);
+        parse_str($sQuery, $mParameters);
+        $this->filters = $this->parseFilter($mParameters);
+        $this->sorters = $this->parseSort($mParameters);
+    }
+
+    private function parseSort($mData)
+    {
+        foreach ($mData as $mField => $mRow) {
+            if ($mField != $this->reservedSortField) continue;
+            $elements = explode(',', $mRow);
+            $out = [];
+            foreach ($elements as $mItem) {
+                $s = new Sorter();
+                if (!$s->parser($mItem)) return [];
+                $out[] = $s;
+            }
+            return $out;
+        }
+        return [];
     }
 
     private function parseFilter($mData)
     {
         $out = array();
         foreach ($mData as $field => $row) {
+            if ($field == $this->reservedSortField) continue;
             $mQueryString = sprintf('%s=%s', $field, urldecode($row));
             $mOperator = $this->tryDiscoveryOperator($mQueryString);
             $criteria = null;
@@ -75,6 +123,7 @@ class UrlQuery
             }
             if (!$criteria instanceof ICriteria) continue;
             if (!$criteria->parser($mQueryString)) continue;
+
             $out[] = $criteria;
         }
         return $out;
