@@ -2,7 +2,7 @@
   "name": "nerd4ever/url-query",
   "description": "A library to extract parameters to filter and sort",
   "type": "library",
-  "license": "proprietary",
+  "license": "GPL-3.0-or-later",
   "authors": [
     {
       "name": "Nerd4ever Desenvolvimento Tecnologico e Inovacao Ltda",
