@@ -13,6 +13,14 @@ class Sorter
     private $field;
 
     /**
+     * Sorter constructor.
+     */
+    public function __construct()
+    {
+        $this->type =  Sorter::asc;
+    }
+
+    /**
      * @return mixed
      */
     public function getType()

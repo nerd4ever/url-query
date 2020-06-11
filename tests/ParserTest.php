@@ -61,7 +61,7 @@ class ParserTest extends TestCase
         $urlQuery->parser(http_build_query(array_merge($mFilters, [
             $urlQuery->getReservedSortField() => join(',', $mSorters)
         ])));
-
+        
         $rFilters = $urlQuery->getFilters();
         $this->assertEquals($i, sizeof($rFilters), 'query string parse filters');
 
