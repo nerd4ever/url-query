@@ -51,6 +51,20 @@ http://sandbox.nerd4ever.com.br/url-query?_orders=data1:asc&data2:desc&data3
 - *test:desc* (**field** => test, **type**=> desc)
 - *test* (**field** => test, **type**=> asc)
 
+## Limit syntax
+```
+http://sandbox.nerd4ever.com.br/url-query?_limit=10
+```
+- *_limit=10* (**property** => _limit, **value**=> 10)
+
+## Offset syntax
+```
+http://sandbox.nerd4ever.com.br/url-query?_limt=10&_offset=1
+```
+
+- *_limit=10* (**property** => _limit, **value**=> 10)
+- *_offset=1* (**property** => __offset, **value**=> 1)
+
 ## QueryString example
 ```
 http://sandbox.nerd4ever.com.br/url-query?data0=3&data1=ge:3&data2=le:3&data3=ne:3&data4=eq:3&data5=gt:3&data6=lt:3&data7=regex:[0-9]&data8=in:3,4,5&data9=between:3,5&data10=contains:3&data11=start:3&data12=finish:5&data13=nil:&_orders=data1:asc,data2:desc,data3
