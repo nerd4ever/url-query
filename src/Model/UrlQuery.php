@@ -7,18 +7,66 @@ namespace Nerd4ever\UrlQuery\Model;
 class UrlQuery
 {
     private $reservedSortField;
+    private $reservedLimitField;
+    private $reservedOffsetField;
     private $filters;
     private $sorters;
+    /**
+     * @var null | integer
+     */
+    private $limit;
+    /**
+     * @var null | integer
+     */
+    private $offset;
 
     /**
      * UrlQuery constructor.
      * @param $reservedSortField
+     * @param $reservedLimitField
+     * @param $reservedOffsetField
      */
-    public function __construct($reservedSortField = '_orders')
+    public function __construct($reservedSortField = '_orders', $reservedLimitField = '_limit', $reservedOffsetField = '_offset')
     {
         $this->reservedSortField = $reservedSortField;
+        $this->reservedLimitField = $reservedLimitField;
+        $this->reservedOffsetField = $reservedOffsetField;
         $this->sorters = [];
         $this->filters = [];
+        $this->limit = null;
+        $this->offset = null;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getLimit(): ?int
+    {
+        return $this->limit;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getOffset(): ?int
+    {
+        return $this->offset;
+    }
+
+    /**
+     * @return string
+     */
+    final public function getReservedLimitField(): string
+    {
+        return $this->reservedLimitField;
+    }
+
+    /**
+     * @return string
+     */
+    final public function getReservedOffsetField(): string
+    {
+        return $this->reservedOffsetField;
     }
 
     /**
@@ -39,7 +87,7 @@ class UrlQuery
 
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getFilters()
     {
@@ -53,6 +101,8 @@ class UrlQuery
         parse_str($sQuery, $mParameters);
         $this->filters = $this->parseFilter($mParameters);
         $this->sorters = $this->parseSort($mParameters);
+        $this->offset = (isset($mParameters[$this->reservedOffsetField])) ? $mParameters[$this->reservedOffsetField] : null;
+        $this->limit = (isset($mParameters[$this->reservedLimitField])) ? $mParameters[$this->reservedLimitField] : null;
     }
 
     private function parseSort($mData)
@@ -75,7 +125,7 @@ class UrlQuery
     {
         $out = array();
         foreach ($mData as $field => $row) {
-            if ($field == $this->reservedSortField) continue;
+            if (in_array($field, [$this->reservedSortField, $this->reservedLimitField, $this->reservedOffsetField])) continue;
             $mQueryString = sprintf('%s=%s', $field, urldecode($row));
             $mOperator = $this->tryDiscoveryOperator($mQueryString);
             $criteria = null;

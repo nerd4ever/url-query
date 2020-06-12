@@ -122,6 +122,34 @@ class ParserTest extends TestCase
     }
 
     /**
+     * @dataProvider parserLimitProvider
+     * @param $value
+     * @param $reservedLimitField
+     * @param $expected
+     */
+    public function testLimit($value, $reservedLimitField, $expected)
+    {
+        $urlQueryStandard = new UrlQuery();
+        $urlQuery = new UrlQuery($urlQueryStandard->getReservedSortField(), $reservedLimitField, $urlQueryStandard->getReservedOffsetField());
+        $urlQuery->parser($value);
+        $this->assertEquals($expected, $urlQuery->getLimit());
+    }
+
+    /**
+     * @dataProvider parserOffsetProvider
+     * @param $value
+     * @param $reservedOffsetField
+     * @param $expected
+     */
+    public function testOffset($value, $reservedOffsetField, $expected)
+    {
+        $urlQueryStandard = new UrlQuery();
+        $urlQuery = new UrlQuery($urlQueryStandard->getReservedSortField(), $urlQueryStandard->getReservedLimitField(), $reservedOffsetField);
+        $urlQuery->parser($value);
+        $this->assertEquals($expected, $urlQuery->getOffset());
+    }
+
+    /**
      * @dataProvider criteriaProvider
      * @param $criteria
      * @param $value
@@ -130,6 +158,26 @@ class ParserTest extends TestCase
     public function testCriteria(ICriteria $criteria, $value, $expected)
     {
         $this->assertSame($expected, $criteria->check($value));
+    }
+
+    public function parserOffsetProvider()
+    {
+        return [
+            'offset standard field value 1' => [sprintf('%s=1', (new UrlQuery())->getReservedOffsetField()), (new UrlQuery())->getReservedOffsetField(), 1],
+            'offset standard field value null' => [sprintf('%s=1', 'test'), (new UrlQuery())->getReservedOffsetField(), null],
+            'offset custom field value 1' => [sprintf('%s=1', '_other'), '_other', 1],
+            'offset custom field value null' => [sprintf('%s=1', 'test'), '_other', null]
+        ];
+    }
+
+    public function parserLimitProvider()
+    {
+        return [
+            'limit standard field value 1' => [sprintf('%s=1', (new UrlQuery())->getReservedLimitField()), (new UrlQuery())->getReservedLimitField(), 1],
+            'limit standard field value null' => [sprintf('%s=1', 'test'), (new UrlQuery())->getReservedLimitField(), null],
+            'limit custom field value 1' => [sprintf('%s=1', '_other'), '_other', 1],
+            'limit custom field value null' => [sprintf('%s=1', 'test'), '_other', null]
+        ];
     }
 
     /**
