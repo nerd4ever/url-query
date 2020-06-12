@@ -23,33 +23,33 @@ use Nerd4ever\UrlQuery\Model\Sorter;
 abstract class AbstractUrlQuerySql implements IUrlQuerySql
 {
 
-    abstract public function urlQueryFilterBetweenToSql($field, $start, $end): ?string;
+    abstract protected function urlQueryFilterBetweenToSql($field, $start, $end): ?string;
 
-    abstract public function urlQueryFilterContainsToSql($field, $value): ?string;
+    abstract protected function urlQueryFilterContainsToSql($field, $value): ?string;
 
-    abstract public function urlQueryFilterEqualsToSql($field, $value): ?string;
+    abstract protected function urlQueryFilterEqualsToSql($field, $value): ?string;
 
-    abstract public function urlQueryFilterFinishToSql($field, $value): ?string;
+    abstract protected function urlQueryFilterFinishToSql($field, $value): ?string;
 
-    abstract public function urlQueryFilterGreaterThanToSql($field, $value): ?string;
+    abstract protected function urlQueryFilterGreaterThanToSql($field, $value): ?string;
 
-    abstract public function urlQueryFilterGreaterThanOrEqualsToSql($field, $value): ?string;
+    abstract protected function urlQueryFilterGreaterThanOrEqualsToSql($field, $value): ?string;
 
-    abstract public function urlQueryFilterInToSql($field, array $values): ?string;
+    abstract protected function urlQueryFilterInToSql($field, array $values): ?string;
 
-    abstract public function urlQueryFilterLessThanToSql($field, $value): ?string;
+    abstract protected function urlQueryFilterLessThanToSql($field, $value): ?string;
 
-    abstract public function urlQueryFilterLessThanOrEqualsToSql($field, $value): ?string;
+    abstract protected function urlQueryFilterLessThanOrEqualsToSql($field, $value): ?string;
 
-    abstract public function urlQueryFilterNilToSql($field): ?string;
+    abstract protected function urlQueryFilterNilToSql($field): ?string;
 
-    abstract public function urlQueryFilterNotEqualsToSql($field, $value): ?string;
+    abstract protected function urlQueryFilterNotEqualsToSql($field, $value): ?string;
 
-    abstract public function urlQueryFilterRegexToSql($field, $value): ?string;
+    abstract protected function urlQueryFilterRegexToSql($field, $value): ?string;
 
-    abstract public function urlQueryFilterStartToSql($field, $value): ?string;
+    abstract protected function urlQueryFilterStartToSql($field, $value): ?string;
 
-    abstract public function urlQuerySort($field, $type): ?string;
+    abstract protected function urlQuerySort($field, $type): ?string;
 
     /**
      * @param ICriteria $criteria
@@ -73,16 +73,16 @@ abstract class AbstractUrlQuerySql implements IUrlQuerySql
             return $this->urlQueryFilterFinishToSql($mField, $criteria->getValue());
         }
         if ($criteria instanceof CriteriaGreaterThan) {
-            return $this->urlQueryFilterFinishToSql($mField, $criteria->getValue());
+            return $this->urlQueryFilterGreaterThanToSql($mField, $criteria->getValue());
         }
         if ($criteria instanceof CriteriaGreaterThanOrEquals) {
             return $this->urlQueryFilterGreaterThanOrEqualsToSql($mField, $criteria->getValue());
         }
         if ($criteria instanceof CriteriaIn) {
-            return $this->urlQueryFilterGreaterThanOrEqualsToSql($mField, $criteria->getValues());
+            return $this->urlQueryFilterInToSql($mField, $criteria->getValues());
         }
         if ($criteria instanceof CriteriaLessThan) {
-            return $this->urlQueryFilterGreaterThanOrEqualsToSql($mField, $criteria->getValue());
+            return $this->urlQueryFilterLessThanToSql($mField, $criteria->getValue());
         }
         if ($criteria instanceof CriteriaLessThanOrEquals) {
             return $this->urlQueryFilterLessThanOrEqualsToSql($mField, $criteria->getValue());
