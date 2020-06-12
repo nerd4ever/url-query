@@ -61,7 +61,7 @@ class ParserTest extends TestCase
         $urlQuery->parser(http_build_query(array_merge($mFilters, [
             $urlQuery->getReservedSortField() => join(',', $mSorters)
         ])));
-        
+
         $rFilters = $urlQuery->getFilters();
         $this->assertEquals($i, sizeof($rFilters), 'query string parse filters');
 
@@ -150,6 +150,33 @@ class ParserTest extends TestCase
     }
 
     /**
+     * @dataProvider hasFilterProvider
+     * @param $queryString
+     * @param $field
+     * @param $expected
+     */
+    public function testHasFilter($queryString, $field, $expected)
+    {
+        $urlQuery = new UrlQuery();
+        $urlQuery->parser($queryString);
+        $this->assertSame($expected, $urlQuery->hasFilter($field));
+    }
+
+    /**
+     * @dataProvider getFilterProvider
+     * @param $queryString
+     * @param $field
+     * @param $expected
+     */
+    public function testGetFilter($queryString, $field, $expected)
+    {
+        $urlQuery = new UrlQuery();
+        $urlQuery->parser($queryString);
+        $this->assertSame($expected, $urlQuery->getFilter($field) instanceof ICriteria);
+
+    }
+
+    /**
      * @dataProvider criteriaProvider
      * @param $criteria
      * @param $value
@@ -158,6 +185,22 @@ class ParserTest extends TestCase
     public function testCriteria(ICriteria $criteria, $value, $expected)
     {
         $this->assertSame($expected, $criteria->check($value));
+    }
+
+    public function hasFilterProvider()
+    {
+        return [
+            'has filter field exits' => ['data1=>1', 'data1', true],
+            'has filter field not exists' => ['data1=>1', 'data2', false]
+        ];
+    }
+
+    public function getFilterProvider()
+    {
+        return [
+            'has filter field found' => ['data1=>1', 'data1', true],
+            'has filter field not found' => ['data1=>1', 'data2', false]
+        ];
     }
 
     public function parserOffsetProvider()

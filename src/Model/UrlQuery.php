@@ -85,6 +85,17 @@ class UrlQuery
         return $this->sorters;
     }
 
+    public function hasFilter($filter): bool
+    {
+        return isset($this->filters[$filter]);
+    }
+
+    public function getFilter($filter): ?ICriteria
+    {
+        if (!$this->hasFilter($filter)) return null;
+        if (!$this->filters[$filter] instanceof ICriteria) return null;
+        return $this->filters[$filter];
+    }
 
     /**
      * @return array
@@ -174,7 +185,7 @@ class UrlQuery
             if (!$criteria instanceof ICriteria) continue;
             if (!$criteria->parser($mQueryString)) continue;
 
-            $out[] = $criteria;
+            $out[$criteria->getField()] = $criteria;
         }
         return $out;
     }
