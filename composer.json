@@ -22,6 +22,9 @@
   "require-dev": {
     "phpunit/phpunit": "7.5.20"
   },
+  "suggest": {
+    "nerd4ever/url-query-pgsql": "Used to process UrlQuerySQL in PostgreSQL"
+  },
   "autoload": {
     "psr-4": {
       "Nerd4ever\\UrlQuery\\": "src/"
