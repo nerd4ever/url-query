@@ -192,7 +192,7 @@ class UrlQuery
 
     private function tryDiscoveryOperator($value)
     {
-        $pattern = sprintf('/^[_a-zA-Z\d]+=(.+)?:.*$/');
+        $pattern = sprintf('/^[a-zA-Z0-9]+=([a-zA-Z0-9]+):{0,1}?.*$/');
         if (preg_match($pattern, $value, $matches) !== 1) return null;
         if (count($matches) != 2) return null;
         return (!Operators::isValid($matches[1])) ? null : $matches[1];

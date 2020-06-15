@@ -237,6 +237,7 @@ class ParserTest extends TestCase
     public function parserProvider()
     {
         return [
+            'parser greater than many spliter' => [new CriteriaGreaterThan(), 'time=gt:11:00:00', true],
             'parser between found' => [new CriteriaBetween(), 'date=between:3,5', true],
             'parser between invalid range' => [new CriteriaBetween(), 'date=between:3', false],
             'parser between invalid operator' => [new CriteriaBetween(), 'date=betwe:3,5', false],
